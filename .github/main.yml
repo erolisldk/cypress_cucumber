@@ -1,34 +1,23 @@
-name: Cypress Tests
+name: E2E on Chrome
 
-on: push
+on: [push]
 
 jobs:
-  cypress-run:
-    runs-on: ubuntu-22.04
+  install:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-      # Install npm dependencies, cache them correctly
-      # and run all Cypress tests
-      - name: Cypress run
-        uses: cypress-io/github-action@v6
-        with:
-          working-directory: cypress
-          build: npm run build
-          start: npm start
+        uses: actions/checkout@v2
 
-        name: Uploading artifact
-        uses: actions/upload-artifact@v2
-        if: always()
+      - name: Cypress run
+        uses: cypress-io/github-action@v3
         with:
-          name: cypress-execution-report
-          path: cypress/reports/html
-          retentions-days: 30
-        name: Slcak Notification
-        uses: rtcamp/action-slcak-notify@v2
-        anv:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_USERNAME:
-          SLACK_TITLE: Smoke Test
-          SLACK_MESSAGE: "Daily Test Result :rocket:"
-          SLACK_COLOR: ${{ job.status }}
+          project: ./site
+          browser: chrome
+          build: yarn build
+          start: yarn start
+          wait-on: "http://localhost:3000"
+        env:
+          COMMERCE_PROVIDER: ${{ secrets.COMMERCE_PROVIDER }}
+          NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN: ${{ secrets.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN }}
+          NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN: ${{ secrets.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN }}
