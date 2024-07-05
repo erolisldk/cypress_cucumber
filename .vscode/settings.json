@@ -1,0 +1,55 @@
+{
+    "cucumberautocomplete.steps": [
+        "cypress/e2e/**/*.js"
+    ],
+    "cucumber.features": [
+        "src/test/**/*.feature",
+        "qa-scenarios/*.feature"
+    ],
+    "cucumber.glue": [
+        "cypress/e2e/**/*.js"
+    ],
+    "cucumberautocomplete.syncfeatures": "qa-scenarios/*feature",
+    "cucumberautocomplete.strictGherkinCompletion": true,
+    "cucumberautocomplete.strictGherkinValidation": true,
+    "cucumberautocomplete.smartSnippets": true,
+    "cucumberautocomplete.stepsInvariants": true,
+    "cucumberautocomplete.skipDocStringsFormat": true,
+    "cucumberautocomplete.onTypeFormat": true,
+    "editor.quickSuggestions": {
+        "comments": false,
+        "strings": true,
+        "other": true
+    },
+    "cucumberautocomplete.gherkinDefinitionPart": "(Given|When|Then|And)\\(",
+    "cucumberautocomplete.stepRegExSymbol": "'",
+    "cucumberautocomplete.formatConfOverride": {
+        "#": 2,
+    },
+  }{
+    "cucumberautocomplete.steps": [
+        "src/step_definitions/*.js",
+    ],
+    "cucumberautocomplete.syncfeatures": "src/features/*feature",
+    "cucumberautocomplete.strictGherkinCompletion": true,
+    "cucumberautocomplete.strictGherkinValidation": true,
+    "cucumberautocomplete.smartSnippets": true,
+    "cucumberautocomplete.stepsInvariants": true,
+    // "cucumberautocomplete.pages": {
+    //     "users": "test/features/page_objects/users.storage.js",
+    //     "pathes": "test/features/page_objects/pathes.storage.js",
+    //     "main": "test/features/support/page_objects/main.page.js"
+    // },
+    "cucumberautocomplete.skipDocStringsFormat": true,
+    "cucumberautocomplete.formatConfOverride": {
+        "And": 3,
+        "But": "relative",
+    },
+    "cucumberautocomplete.onTypeFormat": true,
+    "editor.quickSuggestions": {
+        "comments": false,
+        "strings": true,
+        "other": true
+    },
+    "cucumberautocomplete.gherkinDefinitionPart": "(Given|When|Then)\\(",
+    }

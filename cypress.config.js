@@ -12,10 +12,12 @@ module.exports = defineConfig({
       createBundler({
         plugins: [createEsbuildPlugin.default(config)],
       }));
+      
       preprocessor.addCucumberPreprocessorPlugin(on, config);
       return config;
     },
 	specPattern: "**/*.feature",
  
   },
+  //baseUrl: "https://www.optimum7.com",
 })
