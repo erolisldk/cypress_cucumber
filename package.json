@@ -4,7 +4,8 @@
   "description": "Boilerplate for implementing BDD (cucumber) in cypress",
   "main": "cypress.config.js",
   "scripts": {
-    "test": "cypress run"
+    "test": "cypress run",
+    "ui-regression": "cypress run --browser chrome --spec cypress/e2e/Login.feature/"
   },
   "keywords": [],
   "author": "",
