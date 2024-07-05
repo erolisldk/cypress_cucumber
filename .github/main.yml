@@ -1,0 +1,34 @@
+name: Cypress Tests
+
+on: push
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      # Install npm dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: cypress
+          build: npm run build
+          start: npm start
+
+        name: Uploading artifact
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: cypress-execution-report
+          path: cypress/reports/html
+          retentions-days: 30
+        name: Slcak Notification
+        uses: rtcamp/action-slcak-notify@v2
+        anv:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_USERNAME:
+          SLACK_TITLE: Smoke Test
+          SLACK_MESSAGE: "Daily Test Result :rocket:"
+          SLACK_COLOR: ${{ job.status }}
