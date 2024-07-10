@@ -1,13 +1,13 @@
 {
     "cucumberautocomplete.steps": [
-        "cypress/e2e/**/*.js"
+        "cypress/support/**/*.js"
     ],
     "cucumber.features": [
         "src/test/**/*.feature",
         "qa-scenarios/*.feature"
     ],
     "cucumber.glue": [
-        "cypress/e2e/**/*.js"
+        "cypress/support/**/*.js"
     ],
     "cucumberautocomplete.syncfeatures": "qa-scenarios/*feature",
     "cucumberautocomplete.strictGherkinCompletion": true,
