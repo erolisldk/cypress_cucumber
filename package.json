@@ -5,7 +5,7 @@
   "main": "cypress.config.js",
   "scripts": {
     "test": "cypress run",
-    "ui-regression": "cypress run --browser chrome --spec cypress/e2e/**.feature/"
+    "ui-regression": "cypress run --browser chrome --spec cypress/support/**.feature/"
   },
   "keywords": [],
   "author": "",
