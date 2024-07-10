@@ -1,17 +1,59 @@
 name: Cypress Tests
 
-on: push
+on: 
+  schedule:
+    - cron:  '0 21 * * *'
+  workflow_dispatch:
+env:
+  SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook_url }}
+  AZURE_STORAGE_KEY: ${{ secrets.azure_dev_storage_key }}
+  GITHUB_TOKEN: ${{ secrets.pointr_github_token }}
+concurrency:
+  group: nightly-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  cypress-run:
-    runs-on: ubuntu-22.04
+  chrome:
+    runs-on: [self-hosted, macos, "25", "web"]
+    defaults:
+      run:
+        shell: zsh {0}
     steps:
-      - name: Checkout
+      - name: environment variables
+        run: env
+      - name: checkout
         uses: actions/checkout@v4
-      # Install npm dependencies, cache them correctly
-      # and run all Cypress tests
-      - name: Cypress run
-        uses: cypress-io/github-action@v6
-        with:
-          build: npm install
-          start: npm run
+      - name: Check for commits in the last 24 hours
+        run: |
+          if [ -z "$(git rev-list --since='24 hours ago' HEAD)" ]; then
+            echo "No commits in the last 24 hours. Cancelling run..."
+            run_id=$(echo "$GITHUB_RUN_ID")
+            owner=$(echo "$GITHUB_REPOSITORY" | cut -d/ -f1)
+            repo=$(echo "$GITHUB_REPOSITORY" | cut -d/ -f2)
+            curl -X POST \
+                 -H "Authorization: token $GITHUB_TOKEN" \
+                 -H "Accept: application/vnd.github.v3+json" \
+                 "https://api.github.com/repos/$owner/$repo/actions/runs/$run_id/cancel"
+            exit 1
+          fi
+      - name: npm version
+        run: |
+          nvm install 18
+      - name: npm ci
+        run: |
+          grep -qxF '${{ secrets.NPM_AUTH_TOKEN }}' ~/.npmrc || echo '${{ secrets.NPM_AUTH_TOKEN }}' >> ~/.npmrc
+          npm ci
+      - name: npm run
+        run: |
+          ./node_modules/.bin/webpack -p --env.dev
+          ./node_modules/.bin/webpack-dev-server -p --env.dev &>/dev/null &
+      - name: cypress pr electron
+        run: |
+          NODE_OPTIONS="--max-old-space-size=8192" npm run test:chrome
+      - name: slack report
+        if: success() || failure()
+        run: |
+          export REPORT_HTML=cypress/results/cucumber-report.html
+          export BASE_REPO_NAME=${GITHUB_REPOSITORY#*/}
+          python cypress/upload_to_azure.py test-reports $REPORT_HTML "$BASE_REPO_NAME/$GITHUB_JOB/$GITHUB_RUN_ID"
+          python cypress/report_to_slack.py web-bot cypress/results/cucumber-report.json
