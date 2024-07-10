@@ -13,15 +13,10 @@
   "devDependencies": {
     "@badeball/cypress-cucumber-preprocessor": "^16.0.3",
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.1",
-    "cypress": "^12.10.0",
-    "mocha": "^10.6.0",
-    "mochawesome-merge": "^4.3.0"
+    "cypress": "^12.10.0"
   },
   "cypress-cucumber-preprocessor": {
     "step_definitions": "cypress/support/step_definitions/",
     "nonGlobalStepDefinitions": false
-  },
-  "dependencies": {
-    "process": "^0.11.10"
   }
 }
