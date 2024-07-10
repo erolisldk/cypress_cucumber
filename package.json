@@ -27,5 +27,9 @@
       "filePrefix": "",
       "fileSuffix": ".cucumber"
     }
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "cypress-iframe": "^1.0.1"
   }
 }

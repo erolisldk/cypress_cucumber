@@ -1,8 +1,59 @@
 import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor'
+import { clickOnPageElement } from './coomonFunctions'
+import {
+  selectors,
+  environmentURLs,
+  environments,
+  baseUrl,
+  clientConfig,
+  mobileDeviceDimensions,
+} from "../common/constants"
+import {
+  checkIfThereAreCertainNumberOfPOIsInTheCurrentLayer,
+  clickOnMapElement,
+  searchOnPoiNumberOnMap,
+  waitUntilMapIdle,
+  goHome,
+  clickUntilElementAppears,
+  clickUntilElementDisappears,
+  checkSortOfAnArray,
+  arraysEqual,
+  ClickUntilTargetTextAppears,
+  ClickUntilTargetTextDisappears,
+  readPOIsFromCurrentLayerFeaturesList,
+  clickOnPageElement,
+  doubleClickOnPageElement,
+  clickOnAPOINumberOnMap,
+  clickOnRandomMapElement,
+  setZoomLevel,
+} from "../common/commonFunctions"
+import { waitUntilSearchResultsArePopulated } from "../search/search"
+import "cypress-real-events"
+import { recurse } from "cypress-recurse"
 
 Given('I go to home page', () => {
     cy.visit('https://optimum7.com')
   })
+
+
+  When('I click on the {string} button', function (pageElement) {
+    clickOnPageElement(pageElement)
+
+  })
+
+
+  Then('I should see youtube video', () => {
+    iframe_selector = 'body > iframe:nth-child(115)'
+    element_to_find_selector = "input[type='text']"
+
+cy.frameLoaded(iframe_selector)
+cy.wait(5000)
+      
+cy.iframe()
+   .get("//a[@aria-label='Close (Esc)']//*[name()='svg']").should('be.visible')
+  })
+ 
+
 
 When('I enter valid username and password', () => {
   cy.fixture('users.json').then((users) => {
