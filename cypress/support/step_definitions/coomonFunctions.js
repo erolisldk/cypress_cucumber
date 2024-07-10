@@ -63,4 +63,3 @@ export function goHome(options) {
         const listOfMobileDevices = ["iphone", "samsung", "pixel", "android"]
         return listOfMobileDevices.some((mobileDevice) => device.toLowerCase().includes(mobileDevice))
       }
-
