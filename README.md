@@ -78,7 +78,7 @@ module.exports = defineConfig({
 
 ```javascript
 "cypress-cucumber-preprocessor": {
-    "step_definitions": "cypress/support/step_definitions/",
+    "step_definitions": "cypress/e2e/step_definitions/",
     "nonGlobalStepDefinitions": false
   }
 ```
@@ -124,7 +124,7 @@ Feature: Users filter
 
 ## 7. Add Step Definitions
 
-`cypress/support/step_definitions/steps.js`
+`cypress/e2e/step_definitions/*.js`
 
 ```javascript
 import { Given, When, Then, DataTable } from '@badeball/cypress-cucumber-preprocessor'

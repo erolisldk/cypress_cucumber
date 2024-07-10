@@ -16,7 +16,7 @@
     "cypress": "^12.10.0"
   },
   "cypress-cucumber-preprocessor": {
-    "step_definitions": "cypress/support/step_definitions/",
+    "step_definitions": "cypress/e2e/step_definitions/",
     "nonGlobalStepDefinitions": false
   }
 }
