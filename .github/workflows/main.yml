@@ -24,11 +24,10 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           build: npm run build
-          start: npm start
+          start: npm run test
       - name: slack report
         if: success() || failure()
         run: |
           export REPORT_HTML=cypress/results/cucumber-report.html
           export BASE_REPO_NAME=${GITHUB_REPOSITORY#*/}
-          python cypress/upload_to_azure.py test-reports $REPORT_HTML "$BASE_REPO_NAME/$GITHUB_JOB/$GITHUB_RUN_ID"
           python cypress/report_to_slack.py web-bot cypress/results/cucumber-report.json
