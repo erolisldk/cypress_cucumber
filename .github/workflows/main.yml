@@ -13,43 +13,44 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  chrome:
-    runs-on: [self-hosted, macos, "25", "web"]
-    defaults:
-      run:
-        shell: zsh {0}
+  install:
+    runs-on: ubuntu-22.04
     steps:
-      - name: environment variables
-        run: env
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v4
-      - name: Check for commits in the last 24 hours
-        run: |
-          if [ -z "$(git rev-list --since='24 hours ago' HEAD)" ]; then
-            echo "No commits in the last 24 hours. Cancelling run..."
-            run_id=$(echo "$GITHUB_RUN_ID")
-            owner=$(echo "$GITHUB_REPOSITORY" | cut -d/ -f1)
-            repo=$(echo "$GITHUB_REPOSITORY" | cut -d/ -f2)
-            curl -X POST \
-                 -H "Authorization: token $GITHUB_TOKEN" \
-                 -H "Accept: application/vnd.github.v3+json" \
-                 "https://api.github.com/repos/$owner/$repo/actions/runs/$run_id/cancel"
-            exit 1
-          fi
-      - name: npm version
-        run: |
-          nvm install 18
-      - name: npm ci
-        run: |
-          grep -qxF '${{ secrets.NPM_AUTH_TOKEN }}' ~/.npmrc || echo '${{ secrets.NPM_AUTH_TOKEN }}' >> ~/.npmrc
-          npm ci
-      - name: npm run
-        run: |
-          ./node_modules/.bin/webpack -p --env.dev
-          ./node_modules/.bin/webpack-dev-server -p --env.dev &>/dev/null &
-      - name: cypress pr electron
-        run: |
-          NODE_OPTIONS="--max-old-space-size=8192" npm run test:chrome
+
+      - name: Cypress install
+        uses: cypress-io/github-action@v6
+        with:
+          # Disable running of tests within install job
+          runTests: false
+          build: npm run build
+
+      - name: Save build folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          if-no-files-found: error
+          path: build
+
+  cypress-run:
+    runs-on: ubuntu-22.04
+    needs: install
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download the build folder
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: build
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm start
+          browser: chrome
       - name: slack report
         if: success() || failure()
         run: |
