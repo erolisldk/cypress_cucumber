@@ -4,7 +4,7 @@ on: push
 
 jobs:
   cypress-run:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -15,3 +15,18 @@ jobs:
         with:
           build: npm install
           start: npm run test
+      - name: Uploading artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cypress-execution-report
+          path: cypress/reports/html
+          retention-days: 30
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_USERNAME: Erolisildak
+          SLACK_TITLE: Optimum7.com Daily Tests
+          SLACK_MESSAGE: "Test Results Here!! :rocket:"
+          SLACK_COLOR: ${{ job.status }}
